@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.0</version>
+    </parent>
+
+    <groupId>com.dji.quartz</groupId>
+    <artifactId>fin-quartz-spring-boot</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>fin-quartz-spring-boot-autoconfigure</module>
+        <module>fin-quartz-spring-boot-starter</module>
+        <module>fin-quartz-spring-boot-web</module>
+        <module>fin-quartz-spring-boot-service</module>
+        <module>fin-quartz-spring-boot-html</module>
+        <module>fin-quartz-spring-boot-sample</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <lombok.version>1.18.8</lombok.version>
+        <quartz-starter.version>1.0-SNAPSHOT</quartz-starter.version>
+        <spring-boot.version>2.4.0</spring-boot.version>
+        <quartz.version>2.2.3</quartz.version>
+        <common.lang3.version>3.7</common.lang3.version>
+        <mybatis.plus.version>3.4.0</mybatis.plus.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${common.lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.dji.quartz</groupId>
+                <artifactId>fin-quartz-spring-boot-autoconfigure</artifactId>
+                <version>${quartz-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dji.quartz</groupId>
+                <artifactId>fin-quartz-spring-boot-service</artifactId>
+                <version>${quartz-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dji.quartz</groupId>
+                <artifactId>fin-quartz-spring-boot-html</artifactId>
+                <version>${quartz-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dji.quartz</groupId>
+                <artifactId>fin-quartz-spring-boot-web</artifactId>
+                <version>${quartz-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dji.quartz</groupId>
+                <artifactId>quartz-spring-boot-html</artifactId>
+                <version>${quartz-starter.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
