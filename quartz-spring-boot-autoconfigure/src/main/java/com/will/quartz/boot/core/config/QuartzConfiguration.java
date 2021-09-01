@@ -1,5 +1,6 @@
 package com.will.quartz.boot.core.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,10 +23,9 @@ public class QuartzConfiguration {
 
     @PostConstruct
     public void checkProperties(){
-        //TODO　检查配置项，如无，主动抛出异常提醒
-//        if(quartzProperties.getEnabled()){
-//            throw new RuntimeException(QuartzProperties.QUARTZ_PREFIX + ".enabled 配置项未设置");
-//        }
+        if(StringUtils.isEmpty(quartzProperties.getPropertyPath())){
+            throw new RuntimeException(QuartzProperties.QUARTZ_PREFIX + ".propertyPath 配置项未设置");
+        }
     }
 
     @Bean

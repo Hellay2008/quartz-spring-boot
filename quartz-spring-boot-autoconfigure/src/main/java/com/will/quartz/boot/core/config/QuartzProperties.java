@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix=QuartzProperties.QUARTZ_PREFIX)
 public class QuartzProperties {
-    static final String QUARTZ_PREFIX = "fin.quartz";
+    static final String QUARTZ_PREFIX = "quartz";
     private Boolean enabled;
     private String propertyPath;
 }

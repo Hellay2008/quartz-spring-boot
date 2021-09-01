@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class QuartLogAspect {
-    private static final int ERROR_MESSAGE_MAX_LENGTH = 900;
+    private static final int ERROR_MESSAGE_MAX_LENGTH = 2000;
     @Autowired
     JobLogService jobLogService;
 
