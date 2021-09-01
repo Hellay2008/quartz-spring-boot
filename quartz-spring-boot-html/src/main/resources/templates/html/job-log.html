@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>定时任务日志</title>
+</head>
+<link rel="stylesheet" href="static/css/index.css">
+<script src="static/js/vue.js"></script>
+<script src="static/js/element.js"></script>
+<script src="static/js/axios.min.js"></script>
+
+<body>
+<div id="app">
+    <div style="vertical-align: middle; height: 60px; margin-top: 10px;">
+        <el-form :model="searchForm" label-width="80px" ref="searchForm" class="search-form">
+            <el-row :gutter="2">
+                <el-col :span="4">
+                    <el-form-item label="bean名称" prop="jobName">
+                        <el-input v-model="searchForm.jobName"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="任务描述" prop="jobName">
+                        <el-input v-model="searchForm.jobDesc"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3">
+                    <el-form-item label="状态" prop="status">
+                        <el-select v-model="searchForm.status" filterable clearable>
+                            <el-option v-for="item in statusList"
+                                       :key="item.code"
+                                       :label="item.name"
+                                       :value="item.code"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="日志内容" prop="message">
+                        <el-input v-model="searchForm.message"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="执行时间" prop="executeTime">
+                        <el-date-picker
+                                v-model="searchForm.executeTime"
+                                type="datetimerange"
+                                value-format="timestamp"
+                                range-separator="至"
+                                start-placeholder="开始时间"
+                                end-placeholder="结束时间">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3">
+                    <el-form-item label="" prop="" label-width="10px">
+                        <div style="padding-left: 10px;">
+                            <el-button type="primary" icon="el-icon-search" @click="loadList3" style="float:left;">查询</el-button> &nbsp;
+                            <el-button type="primary" plain icon="el-icon-refresh" @click="handleResetSearch" style="float:left;">重置</el-button>
+                        </div>
+                        </el-row>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+    </div>
+    <el-table
+            v-loading="loading3"
+            :data="tableData3"
+            row-height
+            border
+            :cell-style="renderStatus"
+            style="width: 100%;">
+        <el-table-column
+                label="#"
+                type="index"
+                align="center"
+                min-width="60">
+        </el-table-column>
+        <el-table-column
+                prop="jobId"
+                label="bean名称"
+                min-width="120">
+        </el-table-column>
+        <el-table-column
+                prop="jobDesc"
+                label="任务描述"
+                min-width="120">
+        </el-table-column>
+        <el-table-column
+                prop="executeTime"
+                label="执行时间"
+                align="center"
+                :formatter="(row)=>dateFormat(row.executeTime)"
+                min-width="120">
+        </el-table-column>
+        <el-table-column
+                prop="status"
+                label="状态"
+                align="center"
+                :formatter="(row)=>statusFormat(row.status)"
+                min-width="80">
+        </el-table-column>
+        <el-table-column
+                prop="message"
+                label="日志"
+                :show-overflow-tooltip="true"
+                min-width="200">
+        </el-table-column>
+        <el-table-column
+                prop="createTime"
+                label="创建时间"
+                align="center"
+                :formatter="(row)=>dateFormat(row.createTime)"
+                min-width="120">
+        </el-table-column>
+    </el-table>
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pager3.currentPage"
+                :page-sizes="[10, 20, 50, 100, 300]"
+                :page-size="pager3.pageSize"
+                layout="total, sizes, prev, pager, next"
+                :total="pager3.totalCount">
+        </el-pagination>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                contextPath: "/"+window.document.location.pathname.split("/")[1],
+                beanName:'',
+                loading3: false,
+                statusList: [{name: '正常', code: '0'},{name: '异常', code: '1'}],
+                tableData3: [],
+                pager3: {
+                    currentPage: 1,
+                    pageSize: 20,
+                    totalCount: 0,
+                },
+                searchForm: {
+                    jobName: null,
+                    jobDesc: null,
+                    status: null,
+                    executeTime: null,
+                    executeTimeStart: null,
+                    executeTimeEnd: null,
+                    message: null
+                }
+            }
+        },
+        mounted(){
+            this.loadList3()
+        },
+        methods: {
+            loadList3(){
+                console.log(this.searchForm.executeTime)
+                if (this.searchForm.executeTime) {
+                    this.searchForm.executeTimeStart = this.searchForm.executeTime[0]
+                    this.searchForm.executeTimeEnd = this.searchForm.executeTime[1]
+                } else {
+                    this.searchForm.executeTimeStart = null
+                    this.searchForm.executeTimeEnd = null
+                }
+
+                this.loading3 = true
+                let _this = this;
+                this.fetch('/quartz/searchLog/'+this.pager3.currentPage+"/"+this.pager3.pageSize, {
+                    jobName: this.searchForm.jobName,
+                    jobDesc: this.searchForm.jobDesc,
+                    status: this.searchForm.status,
+                    message: this.searchForm.message,
+                    executeTimeStart: this.searchForm.executeTimeStart,
+                    executeTimeEnd: this.searchForm.executeTimeEnd
+                }, function (response){
+                    _this.pager3.totalCount = response.data.data.total
+                    _this.loading3 = false
+                    _this.tableData3 = response.data.data.records
+                })
+            },
+            handleResetSearch(){
+                this.searchForm = {
+                    jobName: null,
+                    status: null,
+                    executeTime: null,
+                    executeTimeStart: null,
+                    executeTimeEnd: null,
+                    message: null
+                }
+            },
+            handleSizeChange(val) {
+                this.pager3.pageSize = val
+                this.loadList3()
+            },
+            handleCurrentChange(val) {
+                this.pager3.currentPage = val
+                this.loadList3()
+            },
+            fetch(path, param, callback){
+                let _this = this;
+                axios.post(this.contextPath+path, param)
+                    .then(function (response) {
+                        if(response.data.success) {
+                            callback(response)
+                        }else{
+                            _this.$message({
+                                message: '操作失败',
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        _this.$message({
+                            message: JSON.stringify(error),
+                            type: 'error'
+                        });
+                    });
+            },
+            dateFormat(time) {
+                var date=new Date(time);
+                var year=date.getFullYear();
+                /* 在日期格式中，月份是从0开始的，因此要加0
+                 * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+                 * */
+                var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+                var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+                var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+                var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+                var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+                // 拼接
+                return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+            },
+            statusFormat(value){
+                if(value === '0'){
+                    return '正常'
+                }else{
+                    return '异常'
+                }
+            },
+            renderStatus(obj){
+                if(obj.columnIndex === 4){
+                    if(obj.row.status === '1'){
+                        return 'color: red'
+                    }else if(obj.row.status === '0'){
+                        return 'color: green'
+                    }else{
+                        return 'color: black'
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
