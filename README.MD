@@ -6,8 +6,8 @@
 
 ```properties
 # starter开关
-fin.quartz.enabled=true
-fin.quartz.property-path=quartz.properties
+quartz.enabled=true
+quartz.property-path=quartz.properties
 
 ### datasource
 spring.datasource.url=jdbc:mysql://localhost:3306/quartz?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT
